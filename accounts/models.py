@@ -14,10 +14,12 @@ class Profile(models.Model):
     def __str__(self):
         return f'nickname - {self.nickname}, id - {self.id}, password - {self.password}'
 
+
 class Publication(models.Model):
     data = models.DateTimeField(auto_now_add=True)
     profile_id = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    comments = models.CharField(max_length=248,blank=True)
-    contens = models.FileField(null=True, blank=True, upload_to="image")
+    comments = models.CharField(max_length=248, blank=True)
+    contents = models.FileField(null=True, blank=True, upload_to="images")
 
-
+    def __str__(self):
+        return f'nickname - {self.profile_id}'
