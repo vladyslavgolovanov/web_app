@@ -20,4 +20,10 @@ class ProfileEditForm(ProfileBaseForm):
 class ModelFormWithFileField(ModelForm):
     class Meta:
         model = Publication
-        fields ='__all__'
+        fields = '__all__'
+
+
+class PublicationEditForm(ModelForm):
+    class Meta:
+        model = Publication
+        fields = ['comments']

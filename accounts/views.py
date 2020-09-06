@@ -4,7 +4,7 @@ from django.http.response import HttpResponseRedirect, HttpResponse, HttpRespons
 from django.db.models import Q
 from django.shortcuts import render
 
-from accounts.forms import ProfileAddForm, ProfileEditForm
+from accounts.forms import ProfileAddForm, ProfileEditForm, PublicationEditForm
 from accounts.models import Profile, Publication
 from accounts.forms import ModelFormWithFileField
 
@@ -80,15 +80,12 @@ def edit_profile(request, slug):
 
 
 def add_publication(request, slug):
-    try:
-        profile = Profile.objects.get(id=slug)
-    except ObjectDoesNotExist:
-        return HttpResponseNotFound(f'Profile id {slug} not found')
+
     if request.method == 'POST':
-        form = ModelFormWithFileField(request.POST, request.FILES)
+        form = ModelFormWithFileField(request.POST, request.FILES, )
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(f'/show_publication/')
+            return HttpResponseRedirect(f'/publication_show/')
 
     elif request.method == 'GET':
         form = ModelFormWithFileField()
@@ -103,12 +100,45 @@ def add_publication(request, slug):
 
 
 def publication_show(request):
-
     img = Publication.objects.all()
     return render(
         request,
         template_name='publication_show.html',
         context={
             'img': img
+        }
+    )
+
+
+def get_publication(request, slug):
+    img = Publication.objects.filter(profile_id=slug)
+    return render(
+        request,
+        'publication_show.html',
+        context={
+            'img': img
+        }
+    )
+
+
+def edit_publication(request, slug):
+    try:
+        publication = Publication.objects.get(profile_id__id=slug)
+    except ObjectDoesNotExist:
+        return HttpResponseNotFound(f'Profile id {slug} not found')
+    if request.method == 'POST':
+        form = PublicationEditForm(request.POST, request.FILES, instance=publication)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(f'/publication/show/')
+
+    elif request.method == 'GET':
+        form =PublicationEditForm(instance=publication)
+
+    return render(
+        request,
+        template_name='publication_edit.html',
+        context={
+            'form': form
         }
     )

@@ -18,17 +18,15 @@ from django.urls import path
 from accounts import views
 from django.conf import settings
 from django.conf.urls.static import static
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
-
-urlpatterns = (
-    path('admin/', admin.site.urls),
-    path('profiles/', views.get_profiles_list),
-    path('profiles/add/', views.add_profile),
-    path('profiles/show/<slug>', views.get_profile),
-    path('profiles/edit/<slug>', views.edit_profile),
-    path('add_publication/<slug>', views.add_publication),
-    path('show_publication/', views.publication_show),
-    path('', views.get_profiles_list))
-
-
+urlpatterns = [
+                  path('admin/', admin.site.urls),
+                  path('profiles/', views.get_profiles_list),
+                  path('profiles/add/', views.add_profile),
+                  path('profiles/show/<slug>', views.get_profile),
+                  path('profiles/edit/<slug>', views.edit_profile),
+                  path('publication_add/<slug>', views.add_publication),
+                  path('publication_show/', views.publication_show),
+                  path('publication/show/<slug>', views.get_publication),
+                  path('publication_edit/<slug>',views.edit_publication),
+                  path('', views.get_profiles_list)] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

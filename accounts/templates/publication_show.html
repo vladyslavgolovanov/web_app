@@ -1,9 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
 
-<!DOCTYPE html>
-<body>
 
 {% for image in img %}
-    <img src="{% static image.contents.url %}" alt="" />
+    <figure>
+    <figcaption>@{{ image.profile_id.nickname }}</figcaption>
+    <img class="publication"  src="{{image.contents.url}}"  alt="" />
+    <figcaption>{{ image.comments }}   {{ image.data }}</figcaption>
+    </figure>
+    <br>
+
+
 {% endfor %}
 
-</body>
+{% endblock %}

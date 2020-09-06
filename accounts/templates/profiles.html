@@ -6,8 +6,8 @@
 <br>{{ i.nickname }}
 <button onclick="window.location.href='/profiles/edit/{{i.id}}'" type="button">Edit</button>
 <button onclick="window.location.href='/profiles/show/{{i.id}}'" type="button">Show</button>
-<button onclick="window.location.href='/add_publication/{{ i.id }}'" type="button">Add Publication</button>
-<img src="{{MEDIA_URL}}{{ img.contens  }}" />
+<br><button onclick="window.location.href='/add_publication/{{ i.id }}'" type="button">Add Publication</button>
+
 <br>{{ i.login }}
 <br>______
 {% endfor %}
