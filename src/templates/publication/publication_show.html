@@ -4,7 +4,7 @@
 
 {% for image in img %}
     <figure>
-    <figcaption>@{{ image.profile_id.nickname }}</figcaption>
+    <figcaption>@{{ image.profile.nickname }}</figcaption>
     <img class="publication"  src="{{image.contents.url}}"  alt="" />
     <figcaption>{{ image.comments }}   {{ image.data }}</figcaption>
     </figure>
