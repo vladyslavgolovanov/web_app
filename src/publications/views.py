@@ -44,7 +44,7 @@ def get_publication(request, slug):
     img = Publication.objects.filter(profile_id=slug)
     return render(
         request,
-        'publication/publication_show.html',
+        template_name='publication/publication_show.html',
         context={
             'img': img
         }

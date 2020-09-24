@@ -1,11 +1,13 @@
+from django.http import HttpResponseRedirect
+from django.urls import path, include
 
-from django.urls import path
 from accounts import views
+from accounts.views import ProfilesListView, ProfileCreateView, ProfileDetailView
 
 app_name = 'accounts'
 
 urlpatterns = [
-                  path('', views.get_profiles_list),
-                  path('add/', views.add_profile),
-                  path('show/<slug>', views.get_profile),
-                  path('edit/<slug>', views.edit_profile)]
+    path('', ProfilesListView.as_view(), name='list'),
+    path('add/', ProfileCreateView.as_view(), name='add'),
+    path('show/<item_id>', ProfileDetailView.as_view(), name='show'),
+    path('edit/<slug>', views.edit_profile)]
