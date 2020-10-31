@@ -24,7 +24,7 @@ SECRET_KEY = 'rh@)cs0nup-8y$i*wb_7nktxd50r1sjc=k!kk=3=rat_#+g@55'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 # Application definition
 
@@ -37,10 +37,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accounts',
     'publications',
-    'django_extensions'
+    'django_extensions',
+    'custom_auth',
+    'core',
+    'gunicorn'
 ]
 
 MIDDLEWARE = [
+    'core.middlewares.PerformanceMonitoringMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -81,9 +85,8 @@ DATABASES = {
         'NAME': 'postgres',
         'USER': 'user',
         'PASSWORD': 'pass',
-        'HOST': 'localhost',
+        'HOST': 'db',
         'PORT': '5432'
-
 
     }
 }
@@ -98,9 +101,9 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
     },
-    # {
-    #     'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    # },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
@@ -123,10 +126,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
-    '/var/www/static/',
-]
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 
 # Основной url для управления медиафайлами
 MEDIA_URL = '/media/'
@@ -135,3 +136,42 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, '../media/')
 
 LOGIN_REDIRECT_URL = '/profiles/'
+
+ADMIN_GROUP = 'admin_application'
+LOGIN_URL = '/account/login/'
+LOGOUT_REDIRECT_URL = '/profiles/'
+MAX_RESPONSE_TIME = 2
+LOG_RECORDS_COUNT = 20
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+    },
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
+    'handlers': {
+            'file': {
+                'level': 'INFO',
+                'class': 'logging.FileHandler',
+                'filters': ['require_debug_true'],
+                'filename': 'info.log',
+            },
+        },
+    'loggers': {
+            'django': {
+                'handlers': ['file'],
+                'formatters': ['verbose'],
+                'level': 'DEBUG',
+                'propagate': True,
+            }
+        }
+    }
+
