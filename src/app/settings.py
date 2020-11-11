@@ -128,7 +128,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-
 # Основной url для управления медиафайлами
 MEDIA_URL = '/media/'
 
@@ -142,7 +141,7 @@ LOGIN_URL = '/account/login/'
 LOGOUT_REDIRECT_URL = '/profiles/'
 MAX_RESPONSE_TIME = 2
 LOG_RECORDS_COUNT = 20
-
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -158,20 +157,20 @@ LOGGING = {
         },
     },
     'handlers': {
-            'file': {
-                'level': 'INFO',
-                'class': 'logging.FileHandler',
-                'filters': ['require_debug_true'],
-                'filename': 'info.log',
-            },
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filters': ['require_debug_true'],
+            'filename': 'info.log',
         },
+    },
     'loggers': {
-            'django': {
-                'handlers': ['file'],
-                'formatters': ['verbose'],
-                'level': 'DEBUG',
-                'propagate': True,
-            }
+        'django': {
+            'handlers': ['file'],
+            'formatters': ['verbose'],
+            'level': 'DEBUG',
+            'propagate': True,
         }
     }
+}
 

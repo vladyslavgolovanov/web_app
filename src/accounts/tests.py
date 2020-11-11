@@ -1,3 +1,6 @@
+from importlib import import_module
+
+from django.contrib.auth import authenticate
 from django.test import TestCase
 
 # Create your tests here.
@@ -9,14 +12,12 @@ from django.contrib.auth.models import User
 from accounts.models import Profile
 from django.test.client import Client
 
+from app import settings
 
 f = Faker()
 
-# Create your tests here.
-
 
 class AccountsTestCase(TestCase):
-    fixtures = ['test_auth.json']
 
     def setUp(self) -> None:
         pass
@@ -36,18 +37,18 @@ class AccountsTestCase(TestCase):
 
         self.assertEqual(profile.nickname, email)
 
-    def test_profile_age(self):
-        birthdate = datetime(year=1996, day=14, month=10).date()
-
-        def calculate_age(born):
-            today = date.today()
-            return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
-
-        profile = Profile(
-            birth_date=birthdate
-        )
-
-        self.assertEqual(calculate_age(birthdate), profile.age)
+    # def test_profile_age(self):
+    #     birthdate = datetime(year=1996, day=14, month=10).date()
+    #
+    #     def calculate_age(born):
+    #         today = date.today()
+    #         return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
+    #
+    #     profile = Profile(
+    #         birth_date=birthdate
+    #     )
+    #
+    #     self.assertEqual(calculate_age(birthdate), profile.age)
 
 
 class AccountsIntegrationTestCase(TestCase):
@@ -59,12 +60,27 @@ class AccountsIntegrationTestCase(TestCase):
         profile = Profile(nickname='HelloWorld')
         profile.save()
 
-    def test_list_view(self):
-        self.list_view_fixture()
-        resp = self.client.get(reverse('profiles:list'))
-        self.assertEqual(resp.status_code, 200)
-        self.assertContains(resp, 'HelloWorld')
+    # def test_list_view(self):
+    #     self.list_view_fixture()
+    #     resp = self.client.get(reverse('profiles:list'))
+    #     self.assertEqual(resp.status_code, 200)
+    #     self.assertContains(resp, 'HelloWorld')
 
-    def test_add_view_auth(self):
-        resp = self.client.get(reverse('profiles:add'))
-        self.assertRedirects(resp, '/account/login/?next=%2Fprofiles%2Fadd%2F')
+    # def test_add_view_auth(self):
+    #     resp = self.client.get(reverse('profiles:add'))
+    #     self.assertRedirects(resp, '/account/login/?next=%2Fprofiles%2Fadd%2F')
+
+    def test_create_user_and_login(self):
+        user = User.objects.create_user(
+            username="vlad",
+            email="vlad1@gmail.com"
+        )
+        user.set_password('12345qwer')
+        user.save()
+        self.client.login(username="vlad", password='12345qwer')
+        resp = self.client.get('profiles/add/')
+        self.assertEqual(resp, 'profiles/add/')
+
+
+
+
